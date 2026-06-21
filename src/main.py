@@ -3,7 +3,7 @@ import json
 import pickle
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -485,7 +485,7 @@ def get_events():
 def deploy_event(payload: DeployEventPayload):
     # Add to active events
     active_events[payload.id] = payload.dict()
-    active_events[payload.id]["deployed_at"] = datetime.now().isoformat()
+    active_events[payload.id]["deployed_at"] = datetime.now(timezone.utc).isoformat()
     active_events[payload.id]["status"] = "Live Event"
     
     # Deduct resources

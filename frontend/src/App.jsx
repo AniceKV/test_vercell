@@ -9,6 +9,13 @@ import {
 const rawApiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
+const parseDeployedAt = (dateStr) => {
+  if (!dateStr) return new Date();
+  const lastPart = dateStr.slice(-6);
+  const hasTimezone = dateStr.endsWith('Z') || lastPart.includes('+') || lastPart.includes('-');
+  return new Date(hasTimezone ? dateStr : `${dateStr}Z`);
+};
+
 // Extended preset locations covering major Bangalore roads & corridors from dataset
 const LOCATION_PRESETS = [
   { name: "Town Hall", lat: 12.97883, lon: 77.59953 },
@@ -1122,7 +1129,7 @@ export default function App() {
               </div>
             ) : (
               Object.entries(liveEvents).map(([id, ev]) => {
-                const deployedAt = new Date(ev.deployed_at);
+                const deployedAt = parseDeployedAt(ev.deployed_at);
                 const now = new Date();
                 const elapsedMins = (now - deployedAt) / (1000 * 60);
                 const isOverdue = elapsedMins > (ev.duration_mins || 60);
@@ -1186,7 +1193,7 @@ export default function App() {
                               ['Priority', ev.priority],
                               ['Road Closure', ev.requires_road_closure ? 'Yes' : 'No'],
                               ['Location', `${ev.latitude?.toFixed(4)}, ${ev.longitude?.toFixed(4)}`],
-                              ['Deployed At', new Date(ev.deployed_at).toLocaleString()],
+                              ['Deployed At', parseDeployedAt(ev.deployed_at).toLocaleString()],
                             ].map(([k, v]) => (
                               <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '0.35rem', borderBottom: '1px solid #EAEAEA', paddingBottom: '0.3rem' }}>
                                 <span style={{ color: 'var(--text-muted)' }}>{k}</span>

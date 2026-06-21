@@ -6,7 +6,8 @@ import {
   RefreshCw, ChevronDown, ChevronUp, FileText, TrendingUp, Search
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const rawApiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
 // Extended preset locations covering major Bangalore roads & corridors from dataset
 const LOCATION_PRESETS = [

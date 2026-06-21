@@ -1352,7 +1352,7 @@ export default function App() {
             {/* Iframe embedding density_extracted heatmap — light mode, controls below map */}
             <div className="card" style={{ flex: 1, padding: 0, overflow: 'hidden', minHeight: 0 }}>
               <iframe
-                src="/density/heatmap.html"
+                src={`/density/heatmap.html?api_url=${encodeURIComponent(API_URL)}`}
                 title="Density Heatmap"
                 style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
                 allow="*"
